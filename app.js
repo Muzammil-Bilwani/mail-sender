@@ -19,7 +19,7 @@ app.get('/', (req, res) => res.send('API WORKING'));
 app.post('/api/mail', (req, res) => {
   try {
     sgMail.setApiKey(req.body.key);
-    if (req.body.key) {
+    if (!req.body.key) {
       return res.status(400).send({
         message: 'Missing Key'
       })
