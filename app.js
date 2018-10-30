@@ -1,13 +1,22 @@
 const express = require('express')
 const sgMail = require('@sendgrid/mail');
-
+const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const cors = require('cors');
+require('dotenv').config()
 
 const app = express()
-const port = 3000
 
-app.post('/', (req, res) => {
+app.use(helmet());
+app.use(cors());
+app.use(bodyParser.json());
+
+
+const port = 3000;
+
+app.post('/api/mail', (req, res) => {
   try {
-    sgMail.setApiKey(req.body.key || process.env.SEND_GRID_API_KEY);
+    sgMail.setApiKey(req.body.key);
     if (req.body.key) {
       return res.status(400).send({
         message: 'Missing Key'
@@ -17,7 +26,8 @@ app.post('/', (req, res) => {
       from, to, subject, html
     } = req.body;
 
-    if (from || to || subject || html) {
+    if (!from && !to && !subject && !html) {
+      console.error('Incomplete Params');
       return res.status(400).send({
         message: 'Incomplete Params'
       })
@@ -45,6 +55,7 @@ app.post('/', (req, res) => {
 
   }
   catch (err) {
+    console.log(err)
     return res.status(500).json({
       message: 'Something went wrong'
     })
