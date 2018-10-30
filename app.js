@@ -25,10 +25,10 @@ app.post('/api/mail', (req, res) => {
       })
     }
     const {
-      from, to, subject, html
+      from, to, subject, html, text
     } = req.body;
 
-    if (!from && !to && !subject && !html) {
+    if (!from && !to && !subject && !html && !text) {
       console.error('Incomplete Params');
       return res.status(400).send({
         message: 'Incomplete Params'
@@ -39,8 +39,10 @@ app.post('/api/mail', (req, res) => {
       to,
       from,
       subject,
+      text,
       html
     };
+    console.info(msg);
     sgMail.send(msg).then(
       result => {
         return res.status(200).send({
