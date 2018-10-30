@@ -14,6 +14,8 @@ app.use(bodyParser.json());
 
 const port = 3000;
 
+app.get('/', (req, res) => res.send('API WORKING'));
+
 app.post('/api/mail', (req, res) => {
   try {
     sgMail.setApiKey(req.body.key);
